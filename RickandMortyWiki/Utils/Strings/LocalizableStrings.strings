@@ -1,0 +1,17 @@
+/* 
+  LocalizableStrings.strings
+  RickandMortyWiki
+
+  Created by Omar Regalado on 25/08/23.
+  
+*/
+
+//Character Details
+"Details_Gender" = "Gender:";
+"Details_Specie" = "Specie:";
+"Details_Location" = "Location:";
+"Details_Origin" = "Origin:";
+"Details_Status" = "Status:";
+
+//Search Bar
+"SearchBar_PlaceHolder" = "Search Name";
