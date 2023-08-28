@@ -45,7 +45,7 @@ struct CharacterListView: View {
                                }
                            }
                            .searchable(text: $searchText,
-                                       placement: .toolbar,
+                                       placement: .navigationBarDrawer(displayMode: .automatic),
                                        prompt: SearchBarLocalizedString.placeholder)
                        }
                        
@@ -72,14 +72,16 @@ struct CharacterListView: View {
                        } label: {
                            Image(systemName: "line.3.horizontal.decrease.circle.fill")
                                .resizable()
-                               .frame(width: geometry.size.width/6,
-                                      height: geometry.size.width/6)
+                               .frame(width: geometry.size.width/7,
+                                      height: geometry.size.width/7)
                                .foregroundColor(.cyan)
                                .background {
                                    Circle()
                                        .foregroundColor(.white)
                                }
                        }
+                       
+                       
                    }
                    .padding()
                }
