@@ -14,4 +14,10 @@
 "Details_Status" = "Status:";
 
 //Search Bar
-"SearchBar_PlaceHolder" = "Search Name";
+"SearchBar_PlaceHolder" = "Look for your favorite Rick!";
+
+//Status Filter
+"SF_All" = "All";
+"SF_Alive" = "Alive";
+"SF_Dead" = "Dead";
+"SF_Unkown" = "Unkown";

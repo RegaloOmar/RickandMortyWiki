@@ -12,47 +12,91 @@ struct CharacterListView: View {
     
     @StateObject private var viewModel = CharacterListViewModel()
     @State private var searchText = ""
-    @State private var isSearchBarHidden = false
+    @State private var selectedFilter = "All"
+    @State private var showFilters = false
+    private var filterList = ["All", "Alive", "Dead", "Unkown"]
     
     var body: some View {
        NavigationView {
-           VStack {
-               HStack {
-                   SearchBar(searchText: $searchText)
-                       .padding()
-                       .transition(.move(edge: .top))
-               }
-               GeometryReader { geometry in
+           GeometryReader { geometry in
+               ZStack {
                    ScrollView {
                        ScrollViewReader { scrollView in
                            LazyVGrid(columns: [GridItem(.fixed(CGFloat((geometry.size.width / 2) - 5))),
                                                GridItem(.fixed(CGFloat((geometry.size.width / 2) - 5)))],
                                      spacing: 5) {
-                               ForEach(filteredCharacters) { item in
-                                   NavigationLink(destination: CharacterDetailView(character: item)) {
-                                       CharacterView(character: item)
+                               ForEach(filteredCharacters) { character in
+                                   NavigationLink(destination: CharacterDetailView(character: character)) {
+                                       CharacterView(character: character)
+                                           .onAppear {
+                                               if character.id == viewModel.characters.last?.id {
+                                                   Task {
+                                                       await viewModel.loadMore()
+                                                   }
+                                               }
+                                           }
                                    }
                                }
                            }
                            .onAppear {
+                               scrollView.scrollTo(0)
                                Task {
                                    await viewModel.fetchCharactersData()
                                }
                            }
+                           .searchable(text: $searchText,
+                                       placement: .toolbar,
+                                       prompt: SearchBarLocalizedString.placeholder)
                        }
+                       
                    }
+                   .sheet(isPresented: $showFilters, content: {
+                       List(filterList, id: \.self) { filter in
+                           HStack {
+                               Text(filter)
+                           }
+                       }
+                       .preferredColorScheme(.dark)
+                   })
+                   
                    .scrollIndicators(.never)
                    .navigationTitle("Rick-O-pedia")
                }
+               
+               VStack {
+                   Spacer()
+                   HStack {
+                       Spacer()
+                       Button {
+                           showFilters.toggle()
+                       } label: {
+                           Image(systemName: "line.3.horizontal.decrease.circle.fill")
+                               .resizable()
+                               .frame(width: geometry.size.width/6,
+                                      height: geometry.size.width/6)
+                               .foregroundColor(.cyan)
+                               .background {
+                                   Circle()
+                                       .foregroundColor(.white)
+                               }
+                       }
+                   }
+                   .padding()
+               }
            }
+           .navigationBarTitleDisplayMode(.inline)
        }
    }
     
     //MARK:- Search Bar function
     private var filteredCharacters: [Character] {
-        searchText.isEmpty ? viewModel.characters : viewModel.characters.filter({
-            $0.name.localizedStandardContains(searchText)
-        })
+        if searchText.isEmpty {
+            return viewModel.characters
+        } else {
+            return viewModel.characters.filter({
+                $0.name.localizedStandardContains(searchText)
+            })
+        }
     }
 }
 
@@ -114,9 +158,9 @@ struct CharacterView: View {
     
     func colorFromStatus(_ status: String) -> Color {
         switch status {
-        case "Alive":
+        case FilterLocalizedString.alive:
             return Color.green
-        case "Dead":
+        case FilterLocalizedString.dead:
             return Color.red
         default:
             return Color.gray

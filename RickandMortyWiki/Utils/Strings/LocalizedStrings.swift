@@ -18,3 +18,10 @@ struct CharactersLocalizedString {
 struct SearchBarLocalizedString {
     static let placeholder = "SearchBar_PlaceHolder".localizedString()
 }
+
+struct FilterLocalizedString {
+    static let all = "SF_All".localizedString()
+    static let alive = "SF_Alive".localizedString()
+    static let dead = "SF_Dead".localizedString()
+    static let unkown = "SF_Unkown".localizedString()
+}
