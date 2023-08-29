@@ -13,6 +13,7 @@ struct CharactersLocalizedString {
     static let locationPlaceholder = "Details_Location".localizedString()
     static let originPlaceholder = "Details_Origin".localizedString()
     static let statusPlaceholder = "Details_Status".localizedString()
+    static let episodesCountPlaceholder = "Details_Episodes_Count".localizedString()
 }
 
 struct SearchBarLocalizedString {

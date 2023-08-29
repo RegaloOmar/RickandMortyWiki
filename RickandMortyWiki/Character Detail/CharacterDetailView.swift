@@ -9,7 +9,9 @@ import SwiftUI
 import CachedAsyncImage
 
 struct CharacterDetailView: View {
+    @StateObject private var viewModel = CharacterDetailViewModel()
     let character: Character
+    @State private var isLoading = false
 
     var body: some View {
         ScrollView {
@@ -53,8 +55,34 @@ struct CharacterDetailView: View {
                                 information: character.origin.name)
                 
                 InformationPage(placeholder: CharactersLocalizedString.statusPlaceholder,
-                                information: character.status)
+                                information: character.status.capitalized,
+                                status: character.status)
                 
+                InformationPage(placeholder: CharactersLocalizedString.episodesCountPlaceholder,
+                                information: String(character.episode.count))
+                
+                ScrollView(.horizontal, showsIndicators: false) {
+                    LazyHGrid(rows: [GridItem(.flexible())]) {
+                        ForEach(viewModel.episodes) { episode in
+                            if isLoading {
+                                Color.black.opacity(0.3)
+                                    .ignoresSafeArea()
+                                
+                                SpinningProgressView()
+                            } else {
+                                EpisodeGridItem(episodeTitle: episode.name,
+                                                episodeCode: episode.episode)
+                            }
+                        }
+                    }
+                    .onAppear{
+                        isLoading = true
+                        Task {
+                            await viewModel.fetchEpisodes(characterEpisodes: character.episode)
+                            isLoading = false
+                        }
+                    }
+                }
                 
             }
             .preferredColorScheme(.dark)
@@ -65,7 +93,7 @@ struct CharacterDetailView: View {
 struct InformationPage: View {
     let placeholder: String
     let information: String
-    var statusColor: Color? = .primary
+    var status: String? = ""
     
     var body: some View {
         HStack {
@@ -77,8 +105,56 @@ struct InformationPage: View {
             
             Text(information)
                 .font(.title2)
+                .foregroundColor(getFontColor(status ?? ""))
         }
         .padding(5)
+    }
+    
+    private func getFontColor(_ status: String) -> Color{
+        switch status {
+        case FilterLocalizedString.alive:
+            return Color.green
+        case FilterLocalizedString.dead:
+            return Color.red
+        case FilterLocalizedString.unkown.lowercased():
+            return Color.gray
+        default:
+            return Color.primary
+        }
+    }
+    
+}
+
+struct EpisodeGridItem: View {
+    let episodeTitle: String
+    let episodeCode: String
+    
+    var body: some View {
+        
+        ZStack {
+        
+            RoundedRectangle(cornerRadius: 10)
+                .foregroundColor(Color("BlueRick"))
+                .frame(width: 150, height: 150)
+                .overlay {
+                    VStack {
+                        Text(episodeTitle)
+                            .multilineTextAlignment(.center)
+                            .font(.callout)
+                            .bold()
+                            .padding(.bottom, 5)
+                        
+                        Text(episodeCode)
+                            .font(.headline)
+                    }
+            }
+            
+            RoundedRectangle(cornerRadius: 10)
+                .stroke(lineWidth: 5)
+                .foregroundColor(Color("GreenPortal"))
+                
+        }
+        
     }
 }
 

@@ -13,6 +13,7 @@ class CharacterListViewModel: ObservableObject {
     @Published var characters: [Character] = []
     private let characterService: RickandMortyServiceProtocol
     private var nextPage: String?
+    private var mainQueue = DispatchQueue.main
     
     init(characterService: RickandMortyServiceProtocol = RickAndMortyService()) {
         self.characterService = characterService
@@ -21,7 +22,7 @@ class CharacterListViewModel: ObservableObject {
     func fetchCharactersData() async {
         do {
             let rootInfo = try await characterService.getCharactersInfo()
-            DispatchQueue.main.async {
+            mainQueue.async {
                 self.characters = rootInfo.results
                 self.nextPage = rootInfo.info.next
             }
@@ -38,17 +39,30 @@ class CharacterListViewModel: ObservableObject {
         guard
             let isNextPageEnable = nextPage?.isEmpty,
                 isNextPageEnable != true,
-                let nextPage = nextPage else {
+                let nextPage = nextPage
+        else {
             return
         }
         
         do {
             let rootInfo = try await characterService.loadMore(url: nextPage)
-            DispatchQueue.main.async {
+            mainQueue.async {
                 self.characters.append(contentsOf: rootInfo.results)
                 self.nextPage = rootInfo.info.next
             }
         }catch {
+            print(error.localizedDescription)
+        }
+    }
+    
+    func getCharactersWithStatus(_ status: String) async{
+        do {
+            let rootInfo = try await characterService.getCharactersWithFilters(status: status)
+            mainQueue.async {
+                self.characters = rootInfo.results
+                self.nextPage = rootInfo.info.next
+            }
+        } catch {
             print(error.localizedDescription)
         }
     }

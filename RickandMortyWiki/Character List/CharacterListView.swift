@@ -14,74 +14,115 @@ struct CharacterListView: View {
     @State private var searchText = ""
     @State private var selectedFilter = "All"
     @State private var showFilters = false
-    private var filterList = ["All", "Alive", "Dead", "Unkown"]
+    @State private var isLoading = false
+    let amountOfQuestions: UInt32 = 2
     
     var body: some View {
        NavigationView {
            GeometryReader { geometry in
                ZStack {
-                   ScrollView {
-                       ScrollViewReader { scrollView in
-                           LazyVGrid(columns: [GridItem(.fixed(CGFloat((geometry.size.width / 2) - 5))),
-                                               GridItem(.fixed(CGFloat((geometry.size.width / 2) - 5)))],
-                                     spacing: 5) {
-                               ForEach(filteredCharacters) { character in
-                                   NavigationLink(destination: CharacterDetailView(character: character)) {
-                                       CharacterView(character: character)
-                                           .onAppear {
-                                               if character.id == viewModel.characters.last?.id {
-                                                   Task {
-                                                       await viewModel.loadMore()
+                   if isLoading {
+                       Color.black.opacity(0.3)
+                           .ignoresSafeArea()
+                                      
+                       SpinningProgressView()
+                   } else {
+                       ScrollView {
+                           ScrollViewReader { scrollView in
+                               LazyVGrid(columns: [GridItem(.fixed(CGFloat((geometry.size.width / 2) - 5))),
+                                                   GridItem(.fixed(CGFloat((geometry.size.width / 2) - 5)))],
+                                         spacing: 5) {
+                                   ForEach(filteredCharacters) { character in
+                                       NavigationLink(destination: CharacterDetailView(character: character)) {
+                                           CharacterView(character: character)
+                                               .onAppear {
+                                                   if character.id == viewModel.characters.last?.id {
+                                                       Task {
+                                                           await viewModel.loadMore()
+                                                       }
                                                    }
                                                }
-                                           }
+                                       }
                                    }
                                }
+                               .searchable(text: $searchText,
+                                           placement: .navigationBarDrawer(displayMode: .automatic),
+                                           prompt: SearchBarLocalizedString.placeholder)
                            }
-                           .onAppear {
-                               scrollView.scrollTo(0)
+                           
+                       }
+                       .confirmationDialog("Select Status",
+                                           isPresented: $showFilters,
+                                           actions: {
+                           Button(FilterLocalizedString.alive) {
+                               isLoading = true
                                Task {
-                                   await viewModel.fetchCharactersData()
+                                   await viewModel.getCharactersWithStatus(FilterLocalizedString.alive.lowercased())
+                                   try await Task.sleep(nanoseconds: 1_500_000_000 )
+                                   isLoading = false
                                }
                            }
-                           .searchable(text: $searchText,
-                                       placement: .navigationBarDrawer(displayMode: .automatic),
-                                       prompt: SearchBarLocalizedString.placeholder)
-                       }
-                       
-                   }
-                   .sheet(isPresented: $showFilters, content: {
-                       List(filterList, id: \.self) { filter in
-                           HStack {
-                               Text(filter)
+                           Button(FilterLocalizedString.dead) {
+                               isLoading = true
+                               Task {
+                                   await viewModel.getCharactersWithStatus(FilterLocalizedString.dead.lowercased())
+                                   try await Task.sleep(nanoseconds: 1_500_000_000 )
+                                   isLoading = false
+                               }
                            }
-                       }
-                       .preferredColorScheme(.dark)
-                   })
-                   
-                   .scrollIndicators(.never)
-                   .navigationTitle("Rick-O-pedia")
+                           Button(FilterLocalizedString.unkown) {
+                               isLoading = true
+                               Task {
+                                   await viewModel.getCharactersWithStatus(FilterLocalizedString.unkown.lowercased())
+                                   try await Task.sleep(nanoseconds: 1_500_000_000 )
+                                   isLoading = false
+                               }
+                           }
+                           Button(FilterLocalizedString.all) {
+                               isLoading = true
+                               Task {
+                                   await viewModel.fetchCharactersData()
+                                   try await Task.sleep(nanoseconds: 1_000_000_000 )
+                                   isLoading = false
+                               }
+                           }
+                       }, message: {
+                           Text("Select Status")
+                       })
+                       .scrollIndicators(.never)
+                       .navigationTitle("Rick And Morty Wiki")
+                   }
+               }
+               .onAppear {
+                   isLoading = true
+                   Task {
+                       await viewModel.fetchCharactersData()
+                       try await Task.sleep(nanoseconds: 1_000_000_000 )
+                       isLoading = false
+                   }
                }
                
                VStack {
                    Spacer()
                    HStack {
                        Spacer()
-                       Button {
-                           showFilters.toggle()
-                       } label: {
-                           Image(systemName: "line.3.horizontal.decrease.circle.fill")
-                               .resizable()
-                               .frame(width: geometry.size.width/7,
-                                      height: geometry.size.width/7)
-                               .foregroundColor(.cyan)
-                               .background {
-                                   Circle()
-                                       .foregroundColor(.white)
-                               }
+                       if isLoading{
+                           
+                       } else {
+                           Button {
+                               showFilters.toggle()
+                           } label: {
+                               Image(systemName: "line.3.horizontal.decrease.circle.fill")
+                                   .resizable()
+                                   .frame(width: geometry.size.width/7,
+                                          height: geometry.size.width/7)
+                                   .foregroundColor(.cyan)
+                                   .background {
+                                       Circle()
+                                           .foregroundColor(.white)
+                                   }
                        }
-                       
-                       
+                       }
                    }
                    .padding()
                }
@@ -109,7 +150,7 @@ struct CharacterView: View {
         ZStack {
                 RoundedRectangle(cornerRadius: 10)
                     .stroke(lineWidth: 2)
-                    .foregroundColor(.green)
+                    .foregroundColor(Color("GreenPortal"))
             
             VStack{
                 CachedAsyncImage(url: URL(string: character.image),
@@ -125,7 +166,7 @@ struct CharacterView: View {
                             .clipShape(Circle())
                             .overlay(Circle()
                                 .stroke(lineWidth: 1.5)
-                                .foregroundColor(.green))
+                                .foregroundColor(Color("GreenPortal")))
                     case .failure:
                         Image(systemName: "photo")
                             .foregroundColor(.gray)

@@ -12,6 +12,7 @@
 "Details_Location" = "Location:";
 "Details_Origin" = "Origin:";
 "Details_Status" = "Status:";
+"Details_Episodes_Count" = "Episodes in which appears?:";
 
 //Search Bar
 "SearchBar_PlaceHolder" = "Look for your favorite Rick!";
@@ -20,4 +21,4 @@
 "SF_All" = "All";
 "SF_Alive" = "Alive";
 "SF_Dead" = "Dead";
-"SF_Unkown" = "Unkown";
+"SF_Unkown" = "Unknown";
