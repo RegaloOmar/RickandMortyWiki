@@ -71,7 +71,7 @@ class RickAndMortyService: RickandMortyServiceProtocol {
                 let episode = try await fetchEpisode(from: url)
                 episodes.append(episode)
             } catch {
-                print(error.localizedDescription)
+                throw error
             }
         }
         return episodes

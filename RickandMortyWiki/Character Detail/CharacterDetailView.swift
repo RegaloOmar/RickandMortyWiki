@@ -134,7 +134,7 @@ struct EpisodeGridItem: View {
         ZStack {
         
             RoundedRectangle(cornerRadius: 10)
-                .foregroundColor(Color("BlueRick"))
+                .foregroundColor(Color("GreenPortal"))
                 .frame(width: 150, height: 150)
                 .overlay {
                     VStack {
@@ -151,7 +151,7 @@ struct EpisodeGridItem: View {
             
             RoundedRectangle(cornerRadius: 10)
                 .stroke(lineWidth: 5)
-                .foregroundColor(Color("GreenPortal"))
+                .foregroundColor(Color("BlueRick"))
                 
         }
         

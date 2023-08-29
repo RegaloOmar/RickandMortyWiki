@@ -22,3 +22,11 @@
 "SF_Alive" = "Alive";
 "SF_Dead" = "Dead";
 "SF_Unkown" = "Unknown";
+"SF_Message" = "Select Status";
+
+//Error Alert
+"Error_Message" = "Ooops, something went wrong searching all universes, please restart";
+"Error_Ok"= "OK";
+
+//Title
+"Title" = "Rick and Morty Wiki";

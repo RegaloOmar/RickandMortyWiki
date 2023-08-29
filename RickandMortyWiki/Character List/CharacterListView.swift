@@ -12,7 +12,6 @@ struct CharacterListView: View {
     
     @StateObject private var viewModel = CharacterListViewModel()
     @State private var searchText = ""
-    @State private var selectedFilter = "All"
     @State private var showFilters = false
     @State private var isLoading = false
     let amountOfQuestions: UInt32 = 2
@@ -27,7 +26,7 @@ struct CharacterListView: View {
                                       
                        SpinningProgressView()
                    } else {
-                       ScrollView {
+                       ScrollView(.vertical, showsIndicators: false) {
                            ScrollViewReader { scrollView in
                                LazyVGrid(columns: [GridItem(.fixed(CGFloat((geometry.size.width / 2) - 5))),
                                                    GridItem(.fixed(CGFloat((geometry.size.width / 2) - 5)))],
@@ -51,7 +50,7 @@ struct CharacterListView: View {
                            }
                            
                        }
-                       .confirmationDialog("Select Status",
+                       .confirmationDialog(FilterLocalizedString.message,
                                            isPresented: $showFilters,
                                            actions: {
                            Button(FilterLocalizedString.alive) {
@@ -87,10 +86,9 @@ struct CharacterListView: View {
                                }
                            }
                        }, message: {
-                           Text("Select Status")
+                           Text(FilterLocalizedString.message)
                        })
-                       .scrollIndicators(.never)
-                       .navigationTitle("Rick And Morty Wiki")
+                       .navigationTitle(NavigationTitleLocalizedString.title)
                    }
                }
                .onAppear {
@@ -128,7 +126,19 @@ struct CharacterListView: View {
                }
            }
            .navigationBarTitleDisplayMode(.inline)
+           .preferredColorScheme(.dark)
        }
+       .alert(ErrorLocalizaedString.errorMessage,
+              isPresented: Binding<Bool>(get: {
+                   viewModel.error != nil
+               }, set: { newValue in
+                   if !newValue {
+                       viewModel.error = nil
+                   }
+               }))
+        {
+            Button(ErrorLocalizaedString.errorOk, role: .cancel) { }
+        }
    }
     
     //MARK:- Search Bar function

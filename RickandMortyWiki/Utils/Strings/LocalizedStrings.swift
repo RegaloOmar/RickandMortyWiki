@@ -25,4 +25,14 @@ struct FilterLocalizedString {
     static let alive = "SF_Alive".localizedString()
     static let dead = "SF_Dead".localizedString()
     static let unkown = "SF_Unkown".localizedString()
+    static let message = "SF_Message".localizedString()
+}
+
+struct ErrorLocalizaedString {
+    static let errorMessage = "Error_Message".localizedString()
+    static let errorOk = "Error_Ok".localizedString()
+}
+
+struct NavigationTitleLocalizedString {
+    static let title = "Title".localizedString()
 }

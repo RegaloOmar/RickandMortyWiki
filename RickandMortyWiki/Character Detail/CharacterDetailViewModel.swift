@@ -9,6 +9,8 @@ import Foundation
 
 class CharacterDetailViewModel: ObservableObject {
     @Published var episodes: [Episode] = []
+    @Published var error: Error?
+    
     private let characterDetailService: RickandMortyServiceProtocol
     private var mainQueue = DispatchQueue.main
     
@@ -24,7 +26,9 @@ class CharacterDetailViewModel: ObservableObject {
                 self?.episodes = episodesInfo
             }
         } catch {
-            print(error.localizedDescription)
+            mainQueue.async { [weak self] in
+                self?.error = error
+            }
         }
     }
 }
