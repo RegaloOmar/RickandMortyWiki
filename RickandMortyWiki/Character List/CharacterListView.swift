@@ -14,7 +14,6 @@ struct CharacterListView: View {
     @State private var searchText = ""
     @State private var showFilters = false
     @State private var isLoading = false
-    let amountOfQuestions: UInt32 = 2
     
     var body: some View {
        NavigationView {
