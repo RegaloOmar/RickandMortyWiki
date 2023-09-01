@@ -18,7 +18,7 @@ class CharacterListViewModel: ObservableObject {
     func fetchCharactersData() async {
         do {
             if shouldSimulateError {
-                throw NSError(domain: "com.error.RickandMortyWiki",
+                throw NSError(domain: "com.ram.error",
                               code: 1,
                               userInfo: [NSLocalizedDescriptionKey: "Simulated error"])
             }

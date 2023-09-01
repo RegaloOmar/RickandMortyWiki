@@ -14,6 +14,7 @@ struct CharacterListView: View {
     @State private var searchText = ""
     @State private var showFilters = false
     @State private var isLoading = false
+    @State private var isCharacterLoading = false
     
     var body: some View {
        NavigationView {
@@ -25,29 +26,16 @@ struct CharacterListView: View {
                                       
                        SpinningProgressView()
                    } else {
+                       let gridItem = GridItem(.fixed(CGFloat((geometry.size.width / 2) - 5)))
                        ScrollView(.vertical, showsIndicators: false) {
                            ScrollViewReader { scrollView in
-                               LazyVGrid(columns: [GridItem(.fixed(CGFloat((geometry.size.width / 2) - 5))),
-                                                   GridItem(.fixed(CGFloat((geometry.size.width / 2) - 5)))],
-                                         spacing: 5) {
-                                   ForEach(filteredCharacters) { character in
-                                       NavigationLink(destination: CharacterDetailView(character: character)) {
-                                           CharacterView(character: character)
-                                               .onAppear {
-                                                   if character.id == viewModel.characters.last?.id {
-                                                       Task {
-                                                           await viewModel.loadMore()
-                                                       }
-                                                   }
-                                               }
-                                       }
-                                   }
-                               }
+                               MainGridView(gridItem: gridItem,
+                                            viewModel: viewModel,
+                                            filteredCharacters: filteredCharacters)
                                .searchable(text: $searchText,
-                                           placement: .navigationBarDrawer(displayMode: .automatic),
+                                           placement: .navigationBarDrawer ,
                                            prompt: SearchBarLocalizedString.placeholder)
                            }
-                           
                        }
                        .confirmationDialog(FilterLocalizedString.message,
                                            isPresented: $showFilters,
@@ -118,7 +106,7 @@ struct CharacterListView: View {
                                        Circle()
                                            .foregroundColor(.white)
                                    }
-                       }
+                           }
                        }
                    }
                    .padding()
@@ -148,6 +136,31 @@ struct CharacterListView: View {
             return viewModel.characters.filter({
                 $0.name.localizedStandardContains(searchText)
             })
+        }
+    }
+}
+
+struct MainGridView: View {
+    
+    let gridItem: GridItem
+    let viewModel: CharacterListViewModel
+    let filteredCharacters: [Character]
+    
+    var body: some View {
+        LazyVGrid(columns: [gridItem, gridItem],
+                  spacing: 5) {
+            ForEach(filteredCharacters) { character in
+                NavigationLink(destination: CharacterDetailView(character: character)) {
+                    CharacterView(character: character)
+                        .onAppear {
+                            if character.id == viewModel.characters.last?.id {
+                                Task {
+                                    await viewModel.loadMore()
+                                }
+                        }
+                    }
+                }
+            }
         }
     }
 }

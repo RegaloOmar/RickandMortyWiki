@@ -21,6 +21,18 @@ class RickAndMortyService: RickandMortyServiceProtocol {
         components.path = "/api/character"
         return components
     }
+    
+    fileprivate func execute<T: Decodable>(url: URL, dataType: T.Type) async throws -> T {
+        let (data, response) = try await URLSession.shared.data(from: url)
+        
+        guard let responseHTTP = response as? HTTPURLResponse,
+              responseHTTP.statusCode == 200 else {
+            throw RickAndMortyServiceError.codeError
+        }
+        let decoder = JSONDecoder()
+        let respnseData = try decoder.decode(T.self, from: data)
+        return respnseData
+    }
 
     func getCharactersInfo() async throws -> Root {
         let urlComponents = baseURLComponents
@@ -28,11 +40,7 @@ class RickAndMortyService: RickandMortyServiceProtocol {
         guard let url = urlComponents.url else {
             throw RickAndMortyServiceError.invalidURL
         }
-        
-        let (data, _) = try await URLSession.shared.data(from: url)
-        let decoder = JSONDecoder()
-        let root = try decoder.decode(Root.self, from: data)
-        return root
+        return try await execute(url: url, dataType: Root.self)
     }
     
     func loadMore(url: String) async throws -> Root {
@@ -40,10 +48,7 @@ class RickAndMortyService: RickandMortyServiceProtocol {
             throw RickAndMortyServiceError.invalidURL
         }
                 
-        let (data, _) = try await URLSession.shared.data(from: url)
-        let decoder = JSONDecoder()
-        let root = try decoder.decode(Root.self, from: data)
-        return root
+        return try await execute(url: url, dataType: Root.self)
     }
     
     func getCharactersWithFilters(status: String) async throws -> Root {
@@ -54,10 +59,7 @@ class RickAndMortyService: RickandMortyServiceProtocol {
             throw RickAndMortyServiceError.invalidURL
         }
         
-        let (data, _) = try await URLSession.shared.data(from: url)
-        let decoder = JSONDecoder()
-        let root = try decoder.decode(Root.self, from: data)
-        return root
+        return try await execute(url: url, dataType: Root.self)
     }
     
     func fetchEpisodes(from characterEpisodesURL: [String]) async throws -> [Episode]{
@@ -78,15 +80,13 @@ class RickAndMortyService: RickandMortyServiceProtocol {
     }
     
     private func fetchEpisode(from url: URL) async throws -> Episode {
-        let (data, _) = try await URLSession.shared.data(from: url)
-        let decoder = JSONDecoder()
-        let episode = try decoder.decode(Episode.self, from: data)
-        return episode
+        return try await execute(url: url, dataType: Episode.self)
     }
 }
 
 enum RickAndMortyServiceError: Error {
     case invalidURL
+    case codeError
 }
 
 struct CharactersEndpoint {

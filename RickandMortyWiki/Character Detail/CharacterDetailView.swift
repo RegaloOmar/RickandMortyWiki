@@ -12,6 +12,7 @@ struct CharacterDetailView: View {
     @StateObject private var viewModel = CharacterDetailViewModel()
     let character: Character
     @State private var isLoading = false
+    @State private var zoomedItemId: Int? = nil
 
     var body: some View {
         ScrollView {
@@ -61,26 +62,28 @@ struct CharacterDetailView: View {
                 InformationPage(placeholder: CharactersLocalizedString.episodesCountPlaceholder,
                                 information: String(character.episode.count))
                 
-                ScrollView(.horizontal, showsIndicators: false) {
-                    LazyHGrid(rows: [GridItem(.flexible())]) {
-                        ForEach(viewModel.episodes) { episode in
-                            if isLoading {
-                                Color.black.opacity(0.3)
-                                    .ignoresSafeArea()
-                                
-                                SpinningProgressView()
-                            } else {
-                                EpisodeGridItem(episodeTitle: episode.name,
-                                                episodeCode: episode.episode)
+                ZStack {
+                    if isLoading {
+                        Color.black.opacity(0.3)
+                            .ignoresSafeArea()
+                                       
+                        SpinningProgressView()
+                    } else {
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            LazyHGrid(rows: [GridItem(.flexible())]) {
+                                ForEach(viewModel.episodes) { episode in
+                                    EpisodeGridItem(episodeTitle: episode.name,
+                                                    episodeCode: episode.episode)
+                                }
                             }
                         }
                     }
-                    .onAppear{
-                        isLoading = true
-                        Task {
-                            await viewModel.fetchEpisodes(characterEpisodes: character.episode)
-                            isLoading = false
-                        }
+                }
+                .onAppear{
+                    isLoading = true
+                    Task {
+                        await viewModel.fetchEpisodes(characterEpisodes: character.episode)
+                        isLoading = false
                     }
                 }
                 
