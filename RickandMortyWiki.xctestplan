@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "F183F874-E5F2-45EA-BF16-F3F9A245A5D6",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:RickandMortyWiki.xcodeproj",
+        "identifier" : "9F0ECBFD2A98205200A9A5E5",
+        "name" : "RickandMortyWikiTests"
+      }
+    }
+  ],
+  "version" : 1
+}

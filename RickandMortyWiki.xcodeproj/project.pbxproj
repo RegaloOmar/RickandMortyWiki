@@ -57,6 +57,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		9F0DB5822AA27F8000ECE2E5 /* RickandMortyWiki.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = file; path = RickandMortyWiki.xctestplan; sourceTree = SOURCE_ROOT; };
 		9F0ECBEE2A98205100A9A5E5 /* RickandMortyWiki.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RickandMortyWiki.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9F0ECBF12A98205100A9A5E5 /* RickandMortyWikiApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RickandMortyWikiApp.swift; sourceTree = "<group>"; };
 		9F0ECBF52A98205200A9A5E5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -78,7 +79,6 @@
 		9F0ECC5E2A9D792B00A9A5E5 /* Episode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Episode.swift; sourceTree = "<group>"; };
 		9F0ECC652A9D7B8D00A9A5E5 /* CharacterDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterDetailViewModel.swift; sourceTree = "<group>"; };
 		9F0ECC6A2A9DA0FB00A9A5E5 /* RickAndMortyServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RickAndMortyServiceTests.swift; sourceTree = "<group>"; };
-		9F3FADAE2A9DAE10003ACA56 /* RickandMortyWiki.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = RickandMortyWiki.xctestplan; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -153,8 +153,8 @@
 		9F0ECC012A98205200A9A5E5 /* RickandMortyWikiTests */ = {
 			isa = PBXGroup;
 			children = (
-				9F3FADAE2A9DAE10003ACA56 /* RickandMortyWiki.xctestplan */,
 				9F0ECC6A2A9DA0FB00A9A5E5 /* RickAndMortyServiceTests.swift */,
+				9F0DB5822AA27F8000ECE2E5 /* RickandMortyWiki.xctestplan */,
 			);
 			path = RickandMortyWikiTests;
 			sourceTree = "<group>";
