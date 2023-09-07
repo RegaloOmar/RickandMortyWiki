@@ -11,11 +11,30 @@ protocol RickandMortyServiceProtocol {
     func getCharactersInfo() async throws -> Root
     func loadMore(url: String) async throws -> Root
     func getCharactersWithFilters(status: String) async throws -> Root
-    func fetchEpisodes(from characterEpisodesURL: [String]) async throws -> [Episode]
+    func fetchEpisodes(from episodesURL: [String]) async throws -> [Episode]
+    func fecthCharacter(from characterURL: String) async throws -> Character
+}
+
+protocol UserDefaultsManagerProtocol {
+    func save<Element: Codable>(data: Element, key: String)
+}
+
+class UserDefaultsManager: UserDefaultsManagerProtocol {
+    
+    let userDefaults = UserDefaults.standard
+    
+    func save<Element: Codable>(data: Element, key: String) {
+        guard let encodedData = try? JSONEncoder().encode(data) else {
+            return
+        }
+        userDefaults.set(encodedData, forKey: key)
+    }
+    
+    
 }
 
 class RickAndMortyService: RickandMortyServiceProtocol {
-    
+        
     private var baseURLComponents: URLComponents {
         var components = CharactersEndpoint.baseURLComponents
         components.path = "/api/character"
@@ -62,10 +81,10 @@ class RickAndMortyService: RickandMortyServiceProtocol {
         return try await execute(url: url, dataType: Root.self)
     }
     
-    func fetchEpisodes(from characterEpisodesURL: [String]) async throws -> [Episode]{
+    func fetchEpisodes(from episodesURL: [String]) async throws -> [Episode]{
         var episodes: [Episode] = []
         
-        for episodeURL in characterEpisodesURL {
+        for episodeURL in episodesURL {
             do {
                 guard let url = URL(string: episodeURL) else {
                     throw RickAndMortyServiceError.invalidURL
@@ -81,6 +100,14 @@ class RickAndMortyService: RickandMortyServiceProtocol {
     
     private func fetchEpisode(from url: URL) async throws -> Episode {
         return try await execute(url: url, dataType: Episode.self)
+    }
+    
+    func fecthCharacter(from characterURL: String) async throws -> Character {
+        guard let url = URL(string: characterURL) else {
+            throw RickAndMortyServiceError.invalidURL
+        }
+        
+        return try await execute(url: url, dataType: Character.self)
     }
 }
 

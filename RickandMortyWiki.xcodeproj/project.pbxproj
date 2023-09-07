@@ -57,7 +57,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		9F0DB5822AA27F8000ECE2E5 /* RickandMortyWiki.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = file; path = RickandMortyWiki.xctestplan; sourceTree = SOURCE_ROOT; };
+		9F0DB5822AA27F8000ECE2E5 /* RickandMortyWiki.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = RickandMortyWiki.xctestplan; sourceTree = SOURCE_ROOT; };
 		9F0ECBEE2A98205100A9A5E5 /* RickandMortyWiki.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RickandMortyWiki.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9F0ECBF12A98205100A9A5E5 /* RickandMortyWikiApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RickandMortyWikiApp.swift; sourceTree = "<group>"; };
 		9F0ECBF52A98205200A9A5E5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -107,6 +107,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		9F0DB5832AA2838000ECE2E5 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				9F0DB5842AA288C200ECE2E5 /* Episodes */,
+				9F0ECC1B2A98206D00A9A5E5 /* Character List */,
+				9F0ECC322A994F6600A9A5E5 /* Character Detail */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		9F0DB5842AA288C200ECE2E5 /* Episodes */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Episodes;
+			sourceTree = "<group>";
+		};
 		9F0ECBE52A98205100A9A5E5 = {
 			isa = PBXGroup;
 			children = (
@@ -130,11 +147,10 @@
 		9F0ECBF02A98205100A9A5E5 /* RickandMortyWiki */ = {
 			isa = PBXGroup;
 			children = (
+				9F0DB5832AA2838000ECE2E5 /* Views */,
 				9F0ECC362A99B2C000A9A5E5 /* Utils */,
 				9F0ECC282A98511200A9A5E5 /* Data */,
 				9F0ECC1E2A9849A900A9A5E5 /* Network */,
-				9F0ECC1B2A98206D00A9A5E5 /* Character List */,
-				9F0ECC322A994F6600A9A5E5 /* Character Detail */,
 				9F0ECBF12A98205100A9A5E5 /* RickandMortyWikiApp.swift */,
 				9F0ECBF52A98205200A9A5E5 /* Assets.xcassets */,
 				9F0ECBF72A98205200A9A5E5 /* Preview Content */,
@@ -153,8 +169,8 @@
 		9F0ECC012A98205200A9A5E5 /* RickandMortyWikiTests */ = {
 			isa = PBXGroup;
 			children = (
-				9F0ECC6A2A9DA0FB00A9A5E5 /* RickAndMortyServiceTests.swift */,
 				9F0DB5822AA27F8000ECE2E5 /* RickandMortyWiki.xctestplan */,
+				9F0ECC6A2A9DA0FB00A9A5E5 /* RickAndMortyServiceTests.swift */,
 			);
 			path = RickandMortyWikiTests;
 			sourceTree = "<group>";

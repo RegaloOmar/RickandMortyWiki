@@ -13,6 +13,7 @@ struct CharacterDetailView: View {
     let character: Character
     @State private var isLoading = false
     @State private var zoomedItemId: Int? = nil
+    @State private var isModalPresented = false
 
     var body: some View {
         ScrollView {
@@ -74,6 +75,14 @@ struct CharacterDetailView: View {
                                 ForEach(viewModel.episodes) { episode in
                                     EpisodeGridItem(episodeTitle: episode.name,
                                                     episodeCode: episode.episode)
+                                    .sheet(isPresented: $isModalPresented, onDismiss: {
+                                        isModalPresented = false
+                                    }, content: {
+                                        
+                                    })
+                                    .onTapGesture {
+                                        isModalPresented = true
+                                    }
                                 }
                             }
                         }
@@ -86,7 +95,6 @@ struct CharacterDetailView: View {
                         isLoading = false
                     }
                 }
-                
             }
             .preferredColorScheme(.dark)
         }
